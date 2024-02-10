@@ -12,6 +12,7 @@ export type Article = InferSelectModel<typeof articles>; // return type when que
 export type QueriedArticle = Pick<Article, "slug" | "excerpt" | "title">;
 
 export const loader = async ({ context }: LoaderFunctionArgs) => {
+  console.log({ env: context.env });
   const allArticles = await db((context.env as Env).DB)
     .select({
       slug: articles.slug,
