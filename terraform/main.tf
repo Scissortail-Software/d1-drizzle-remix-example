@@ -20,10 +20,10 @@ data "cloudflare_accounts" "cloudflare_account_data" {
   name = "daniel.ware"
 }
 
-resource "cloudflare_d1_database" "example" {
-  account_id = data.cloudflare_accounts.cloudflare_account_data.accounts[0].id
-  name       = "blog"
-}
+# resource "cloudflare_d1_database" "example" {
+#   account_id = data.cloudflare_accounts.cloudflare_account_data.accounts[0].id
+#   name       = "blog"
+# }
 
 resource "cloudflare_pages_project" "example" {
   account_id        = data.cloudflare_accounts.cloudflare_account_data.accounts[0].id
@@ -37,14 +37,18 @@ resource "cloudflare_pages_project" "example" {
   deployment_configs {
     preview {
       always_use_latest_compatibility_date = false
+      d1_databases                         = {}
       fail_open                            = true
+      usage_model                          = "standard"
     }
     production {
       always_use_latest_compatibility_date = false
       d1_databases = {
-        "DB" = resource.cloudflare_d1_database.example.id
+        "DB" = "ee3023a6-f9d6-42de-a3dd-0ef274f07f23"
+        # "DB" = resource.cloudflare_d1_database.example.id
       }
-      fail_open = true
+      fail_open   = true
+      usage_model = "standard"
     }
   }
 
@@ -52,8 +56,8 @@ resource "cloudflare_pages_project" "example" {
     type = "github"
     config {
       owner               = "Scissortail-Software"
-      deployments_enabled = false
-      pr_comments_enabled = false
+      deployments_enabled = true
+      pr_comments_enabled = true
       preview_branch_includes = [
         "*",
       ]
